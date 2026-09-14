@@ -17,7 +17,7 @@ function leituraUsuarios(){
 }
 
 function salvarUsuarios(usuarios){
-    fs.writeFilesSync(ARQUIVO, JSON.stringify(usuarios, null , 2));
+    fs.writeFileSync(ARQUIVO, JSON.stringify(usuarios, null , 2));
 }
 
 
@@ -28,11 +28,13 @@ app.get('/api/usuarios' , (req, res) => {
 });
 
 //POST: criar
-app.post('api/usuarios' , (req, res) => {
+app.post('/api/usuarios' , (req, res) => {
     const {nome, email} = req.body;//leitura do req do body
 
     if(!nome || !email) { //valida campo para nao vir vazio
-        return res.status(400).json({mensagem: "Nome e email são obrigatórios"});
+        return res.status(400).json({
+            mensagem: "Nome e email são obrigatórios"
+        });
     }
 
     const usuarios = leituraUsuarios();
