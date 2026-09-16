@@ -27,6 +27,20 @@ app.get('/api/usuarios' , (req, res) => {
     res.json(usuarios);
 });
 
+
+
+app.get('/api/usuarios/:id' , (req, res) => {
+    const usuarios = leituraUsuarios();
+    const id = Number(req.params.id);
+    const usuario = usuarios.find(usuario => usuario.id === id);
+    if (!usuario){
+        return res.status(404).json({
+            mensagem: "Usuário não encontrado"
+        })
+    }
+    res.json(usuario);
+});
+
 //POST: criar
 app.post('/api/usuarios' , (req, res) => {
     const {nome, email} = req.body;//leitura do req do body
@@ -38,7 +52,6 @@ app.post('/api/usuarios' , (req, res) => {
     }
 
     const usuarios = leituraUsuarios();
-
     const novoUsuario = {id: Date.now(), nome, email};//fazemos os objetivo do novo usario
  
     usuarios.push(novoUsuario);//adicionamos ao final da lista de usuarios
@@ -46,7 +59,33 @@ app.post('/api/usuarios' , (req, res) => {
     salvarUsuarios(usuarios);//salvamos o usuario no arquivo
 
     res.status(201).json(novoUsuario);//retorna sucesso ao criar novo usuario
-})   
+}) 
+
+//PUT: editar
+
+app.put('/api/usuarios/:id', (req, res) => {
+    const {nome,email} = req.body;// pega a infromacao do corpo da requisicao
+    const usuarios = leituraUsuarios();//funcao de leitura 
+    const id = Number(req.params.id)
+
+    const usuario = usuarios.find(usuario => usuario.id === id)
+    //find vai procurar na funcao se usuario id e igual em tipo e valor do id passado pelo front
+    usuario.nome = nome;
+    usuario.email = email;
+    
+    salvarUsuarios();
+
+    res.json(usuario);
+}
+
+
+)
+
+
+
+
+
 app.listen(PORT, ( ) => {
     console.log(`Servidor atualizado em http://localhost:${PORT}`);
 });
+
