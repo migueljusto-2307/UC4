@@ -2,9 +2,10 @@ const API_URL = 'http://localhost:3000/api/usuarios'
 const listaUsuarios = document.getElementById('listaUsuarios')
 
 const form = document.getElementById("formUsuario")
-const nomeImput = document.getElementById("nome")
-const emailImput = document.getElementById("email")
-const botaoImput = document.getElementById("botaoSalvar")
+const usuarioIdInput = document.getElementById("usuarioID")
+const nomeInput = document.getElementById("nome")
+const emailInput = document.getElementById("email")
+const botaoInput = document.getElementById("botaoSalvar")
 
 async function carregarUsuarios() {
         try {
@@ -18,7 +19,9 @@ async function carregarUsuarios() {
         data.forEach(usuario =>{
                 const linha = document.createElement("tr")
                 
-                linha.innerHTML = `<td>${usuario.id}</td><td>${usuario.nome}</td><td>${usuario.email}</td>`;
+                linha.innerHTML = `<td>${usuario.id}</td><td>${usuario.nome}</td><td>${usuario.email}</td>
+                <td><div class="options"><button onclick="editarUsuario(${usuario.id})">Editar</button><button style="color:#fff; background-color:#ff6347" onclick="excluirUsuario(${usuario.id})">Excluir</button></div></td>
+                `;
                 
                 listaUsuarios.appendChild(linha);
         })
@@ -34,23 +37,40 @@ async function carregarUsuarios() {
 form.addEventListener("submit", async (evento) => {//inicia a leitura do botao
     evento.preventDefault();    //nao deixa a pagina atualizar
 
-    const nome = nomeImput.value;
-    const email = emailImput.value;
-
+    const nome = nomeInput.value;
+    const email = emailInput.value;
+    const id = usuarioIdInput.value;
     const usuario = {
         nome,
         email
     };
-
-    await fetch(API_URL, {
+    if(id){
+        await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(usuario)
+    });
+    }else{
+    await fetch(API_URL , {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(usuario)
     });
+}
     carregarUsuarios();
 });
+
+async function editarUsuario(id) {
+    const resposta = await fetch(`${API_URL}/${id}`);
+    const usuario = await resposta.json();
+    nomeInput.value = usuario.nome;
+    emailInput.value = usuario.email;
+    botaoInput.innerHTML = "Salvar alterações";
+}
 
 
 
