@@ -6,6 +6,7 @@ const usuarioIdInput = document.getElementById("usuarioID")
 const nomeInput = document.getElementById("nome")
 const emailInput = document.getElementById("email")
 const botaoInput = document.getElementById("botaoSalvar")
+const mensagem = document.getElementById("mensagem")
 
 async function carregarUsuarios() {
         try {
@@ -80,9 +81,13 @@ async function excluirUsuario(id) {
     await fetch(`${API_URL}/${id}`, {
         method: "DELETE"
     });
+    mostrarMensagem("Usuário excluido com sucesso")
     carregarUsuarios();
 }
-
+ function mostrarMensagem(texto){
+    mensagem.innerHTML = `${texto}`;
+    setTimeout(() => {mensagem.innerHTML = ""}, 3000);
+ }
 
 
 
