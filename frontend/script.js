@@ -53,7 +53,7 @@ form.addEventListener("submit", async (evento) => {//inicia a leitura do botao
         body: JSON.stringify(usuario)
     });
     }else{
-    await fetch(API_URL , {
+    await fetch(API_URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -70,6 +70,17 @@ async function editarUsuario(id) {
     nomeInput.value = usuario.nome;
     emailInput.value = usuario.email;
     botaoInput.innerHTML = "Salvar alterações";
+}
+
+async function excluirUsuario(id) {
+    const confirmar = confirm("Deseja excluir mesmo este usuário?");
+    if (!confirmar){
+        return;
+    }
+    await fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+    });
+    carregarUsuarios();
 }
 
 

@@ -41,7 +41,7 @@ app.get('/api/usuarios/:id', (req, res) => {
     res.json(usuario);
 });
 
-//POST: criar
+//POST: criar 
 app.post('/api/usuarios', (req, res) => {
     const {nome, email} = req.body;//leitura do req do body
 
@@ -81,6 +81,20 @@ app.put('/api/usuarios/:id', (req, res) => {
 
 )
 
+//Excluir 
+
+app.delete("/api/usuarios/:id", (req, res) =>{
+    let usuarios = leituraUsuarios();
+    const id = Number(req.params.id);
+    const usuarioExiste = usuarios.some(usuario => usuario.id === id); //verifica o id e retorna true ou false
+
+    if (!usuarioExiste){
+        return res.status(404).json({mensagem: "Usuário não existe"});
+    }
+    usuarios = usuarios.filter(usuario => usuario.id !== id);// pega  lista de todos os usuários diferentes de selecionado
+    salvarUsuarios(usuarios);
+    res.status(204).send();
+});
 
 
 
